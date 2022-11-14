@@ -1,5 +1,28 @@
 import { initializeApp } from "firebase/app";
 
+import {
+  getAuth,
+  onAuthStateChanged,
+  signInAnonymously,
+  signOut,
+  //   GoogleAuthProvider,
+  signInWithPopup,
+} from "firebase/auth";
+
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  getDoc,
+  setDoc,
+  deleteDoc,
+  addDoc,
+  query,
+  where,
+  doc,
+  onSnapshot,
+} from "firebase/firestore";
+
 // FIREBASE CONFIG OBJECT
 const firebaseConfig = initializeApp({
   apiKey: "AIzaSyAi9B1ebX4fiz0hEC_YUZ3XO_wAQCimSk4",
@@ -18,4 +41,3 @@ const firebaseConfig = initializeApp({
 // STORE FIREBASE FUNCTIONS
 const auth = getAuth(firebaseConfig);
 const db = getFirestore(firebaseConfig);
-const gAuth = new GoogleAuthProvider();

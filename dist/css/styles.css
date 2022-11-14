@@ -19,4 +19,39 @@ p {
   margin-bottom: 16px;
 }
 
+nav {
+  position: fixed;
+  bottom: 0;
+  width: 100vw;
+  height: 70px;
+  background-color: black;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+nav a {
+  display: block;
+  cursor: pointer;
+  height: 35px;
+  width: 35px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+nav #home-link {
+  background-image: url("../img/cards.svg");
+}
+nav #favorites-link {
+  background-image: url("../img/heart.svg");
+}
+nav #builder-link {
+  background-image: url("../img/plus.svg");
+}
+nav #search-link {
+  background-image: url("../img/search.svg");
+}
+nav #profile-link {
+  background-image: url("../img/profile.svg");
+}
+
 /*# sourceMappingURL=styles.css.map */

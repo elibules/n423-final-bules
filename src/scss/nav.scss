@@ -1,0 +1,36 @@
+nav {
+    position: fixed;
+    bottom: 0;
+    width: 100vw;
+    height: 70px;
+    background-color: black;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    a {
+        display: block;
+        cursor: pointer;
+        height: 35px;
+        width: 35px;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+    }
+
+    #home-link {
+        background-image: url("../img/cards.svg");
+    }
+    #favorites-link {
+        background-image: url("../img/heart.svg");
+    }
+    #builder-link {
+        background-image: url("../img/plus.svg");
+    }
+    #search-link {
+        background-image: url("../img/search.svg");
+    }
+    #profile-link {
+        background-image: url("../img/profile.svg");
+    }
+}
