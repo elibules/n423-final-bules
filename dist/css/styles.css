@@ -38,7 +38,7 @@ nav a {
   background-repeat: no-repeat;
   background-size: cover;
 }
-nav #home-link {
+nav #mySets-link {
   background-image: url("../img/cards.svg");
 }
 nav #favorites-link {
