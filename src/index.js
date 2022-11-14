@@ -22,6 +22,7 @@ import {
   doc,
   onSnapshot,
 } from "firebase/firestore";
+import route from "./route";
 
 // FIREBASE CONFIG OBJECT
 const firebaseConfig = initializeApp({
@@ -41,3 +42,11 @@ const firebaseConfig = initializeApp({
 // STORE FIREBASE FUNCTIONS
 const auth = getAuth(firebaseConfig);
 const db = getFirestore(firebaseConfig);
+
+$(window).on("hashchange", () => {
+  route();
+});
+
+$(document).ready(() => {
+  route();
+});
