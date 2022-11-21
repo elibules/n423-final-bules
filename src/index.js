@@ -45,12 +45,16 @@ const auth = getAuth(firebaseConfig);
 const db = getFirestore(firebaseConfig);
 const controller = new Controller();
 
+/**
+ * If there's a hash in the URL, display the page that corresponds to the hash. If there's no hash,
+ * display the mySets page
+ */
 function route() {
   let hash = window.location.hash.replace("#", "");
   if (hash) {
-    controller[hash]();
+    controller.display(hash);
   } else {
-    controller["mySets"]();
+    controller.display("mySets");
   }
 }
 
