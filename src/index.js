@@ -23,7 +23,7 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 
-import Controller from "./controller";
+import Controller from "./Controller";
 
 // FIREBASE CONFIG OBJECT
 const firebaseConfig = initializeApp({
@@ -46,15 +46,15 @@ const db = getFirestore(firebaseConfig);
 const controller = new Controller();
 
 /**
- * If there's a hash in the URL, display the page that corresponds to the hash. If there's no hash,
- * display the mySets page
+ * If there's a hash in the URL, call the controller function that matches the hash. If there's no
+ * hash, call the controller function that matches the default route
  */
 function route() {
   let hash = window.location.hash.replace("#", "");
   if (hash) {
-    controller.display(hash);
+    controller[hash]();
   } else {
-    controller.display("mySets");
+    controller["mySets"]();
   }
 }
 

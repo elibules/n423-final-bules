@@ -1,34 +1,33 @@
-import Model from "./model";
+import Model from "./Model";
 
 export default class Controller {
   constructor() {
     this.model = new Model();
   }
 
-  display(page) {
+  #display(page) {
     this.model.fetchContent(page).then((result) => {
       $("#app").html(result);
-      this[page]();
     });
   }
 
   mySets() {
-    console.log("mySets");
+    this.#display("mySets");
   }
 
   favorites() {
-    console.log("favorites");
+    this.#display("favorites");
   }
 
   builder() {
-    console.log("builder");
+    this.#display("builder");
   }
 
   search() {
-    console.log("search");
+    this.#display("search");
   }
 
   profile() {
-    console.log("profile");
+    this.#display("profile");
   }
 }
