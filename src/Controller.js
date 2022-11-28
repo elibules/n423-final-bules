@@ -2,28 +2,28 @@ import Model from "./Model";
 import Auth from "./Auth";
 
 export default class Controller {
-  static config;
+	static config;
 
- constructor(firebaseConfig) {
-    this.config = firebaseConfig;
-    this.Model = new Model(this.config);
-    this.Auth = new Auth(this.config);
+	constructor(firebaseConfig) {
+		this.config = firebaseConfig;
+		this.Model = new Model(this.config);
+		this.Auth = new Auth(this.config);
 
-  }
+	}
 
 	async init() {
 		await this.Auth.user;
 	}
 
-  async #display(page) {
+	async #display(page) {
 		if (this.Auth.user == null && page != "login") {
 			this.#login();
 			return;
 		}
-    await this.Model.fetchContent(page).then((result) => {
-      $("#app").html(`<section id="${page}Page">` + result + `</section>`);
-    });
-  }
+		await this.Model.fetchContent(page).then((result) => {
+			$("#app").html(`<section id="${page}Page">` + result + `</section>`);
+		});
+	}
 
 	#login() {
 		this.#display("login").then(() => {
@@ -40,35 +40,63 @@ export default class Controller {
 
 			$('#submitLogin').on('click', () => {
 				this.Auth.login($("#lEmail").val(), $("#lPassword").val()).then(() => {
-					location.reload();
+					let hash = window.location.hash.replace("#", "");
+					if (hash) {
+						this[hash]();
+					} else {
+						this.mySets();
+					}
 				});
 			});
 
 			$('#submitRegister').on('click', () => {
 				this.Auth.register($("#rEmail").val(), $("#rPassword").val()).then(() => {
-					location.reload();
+					let hash = window.location.hash.replace("#", "");
+					if (hash) {
+						this[hash]();
+					} else {
+						this.mySets();
+					}
 				})
 			})
-  });
+		});
 	}
 
-  mySets() {
-    this.#display("mySets");
-  }
+	mySets() {
+		this.#display("mySets").then(() => {
+			this.Model.getUserSets().then((result) => {
+				console.log(result)
+				$('#setList').html(result);
+				$('.setInList').on('click', (e) => {
+					let id = e.currentTarget.getAttribute('data-id');
+					console.log(id);	
+				})
+			})
+		})
+	}
 
-  favorites() {
-    this.#display("favorites");
-  }
+	favorites() {
+		this.#display("favorites").then(() => {
+			this.Model.getFavoriteSets().then((result) => {
+				console.log(result)
+				$('#setList').html(result);
+				$('.setInList').on('click', (e) => {
+					let id = e.currentTarget.getAttribute('data-id');
+					console.log(id);	
+				})
+			})
+		})
+	}
 
-  builder() {
-    this.#display("builder");
-  }
+	builder() {
+		this.#display("builder");
+	}
 
-  search() {
-    this.#display("search");
-  }
+	search() {
+		this.#display("search");
+	}
 
-  profile() {
-    this.#display("profile");
-  }
+	profile() {
+		this.#display("profile");
+	}
 }
