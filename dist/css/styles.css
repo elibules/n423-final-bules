@@ -54,4 +54,13 @@ nav #profile-link {
   background-image: url("../img/profile.svg");
 }
 
+.set-form {
+  display: flex;
+  flex-direction: column;
+}
+.set-form div {
+  display: flex;
+  flex-direction: column;
+}
+
 /*# sourceMappingURL=styles.css.map */

@@ -9,15 +9,15 @@ const controller = new Controller(firebaseConfig);
  */
 function route() {
   let hash = window.location.hash.replace("#", "").split("/");
-	controller.init().then(() => {
-  if (hash[0] && hash[1]) {
-    controller[hash[0]](hash[1]);
-	} else if(hash[0]) {
-		controller[hash[0]]();
-	} else {
-    controller["mySets"]();
-  }
-	})
+  controller.init().then(() => {
+    if (hash[0] && hash[1]) {
+      controller[hash[0]](hash[1]);
+    } else if (hash[0]) {
+      controller[hash[0]]();
+    } else {
+      controller["mySets"]();
+    }
+  });
 }
 
 $(window).on("hashchange", () => {

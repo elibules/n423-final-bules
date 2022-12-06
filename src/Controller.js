@@ -15,6 +15,10 @@ export default class Controller {
 		await this.Auth.user;
 	}
 
+	#alarm(message) {
+		alert(message);
+	}
+
 	async #display(page) {
 		if (this.Auth.user == null && page != "login") {
 			this.#login();
@@ -67,10 +71,20 @@ export default class Controller {
 			this.Model.getUserSets().then((result) => {
 				console.log(result)
 				$('#setList').html(result);
-				$('.setInList').on('click', (e) => {
+
+				$('.setInList h3').on('click', (e) => {
 					let id = e.currentTarget.getAttribute('data-id');
 					window.location.hash = "#viewSet/" + id;
 				})
+				
+				$('.delete').on('click', (e) => {
+					if(!confirm('Are you sure you want to delete this set?')) return;
+
+					let id = e.currentTarget.getAttribute('data-id');
+					this.Model.deleteSet(id).then((result) => {
+						window.location.reload();
+					});
+				});
 			})
 		})
 	}
@@ -78,7 +92,6 @@ export default class Controller {
 	favorites() {
 		this.#display("favorites").then(() => {
 			this.Model.getFavoriteSets().then((result) => {
-				console.log(result)
 				$('#setList').html(result);
 				$('.setInList').on('click', (e) => {
 					let id = e.currentTarget.getAttribute('data-id');
@@ -96,17 +109,172 @@ export default class Controller {
 			}
 			this.Model.viewSet(id).then((content) => {
 				$("#viewSetPage").append(content);
+				$(".card").on("click", (e) => {
 
+					let card = e.currentTarget;
+					let idx = card.id.match(/\d/g).join("");
+					let shown = card.getAttribute('data-show');
+					
+					$("#"+idx+shown).hide();
+					if(shown == 'front') {
+						$("#"+idx+'back').show();
+						card.setAttribute('data-show', 'back');
+					} else {
+						$("#"+idx+'front').show();	
+						card.setAttribute('data-show', 'front');
+					}
+				})
 			})
 		})
 	}
 
 	builder() {
-		this.#display("builder");
+		this.#display("builder").then(() => {
+			let cardCount = 0;
+
+			$("#add-card").on("click", () => {
+				cardCount++;
+
+				$("#build-cards").append(`
+					<div class="build-card" id="${cardCount}card">
+						<hr>
+						<span onclick="removeCard(${cardCount})">X</span>
+						<label>Front</label>
+						<input id="${cardCount}front" class="front" type="text">
+						<label>Back</label>
+						<input id="${cardCount}back" class="back" type="text">
+					</div>
+				`)
+			})	
+
+			$("#submit-set").on("click", (e) => {
+				let title = $("#title").val();
+
+				if(!title) {
+					throw this.#alarm('Title must be filled out!');
+				}
+
+				let cardElements = Array.from(document.getElementsByClassName('build-card'));
+				console.log(cardElements)
+
+				let cards = [];
+
+				cardElements.forEach((card) => {
+					let idx = card.id.match(/\d/g).join("");
+					let front = $("#"+idx+'front').val();
+					let back = $("#"+idx+'back').val();
+
+					if (!front || !back) {
+						throw this.#alarm('All cards must be completely filled out!');
+					}
+
+					cards.push({
+						front: front,
+						back: back
+					})
+
+				})
+
+				this.Model.publishSet(title, cards).then((result) => {
+					if(result) {
+						window.location.href = "#mySets";
+					}
+				})
+
+			})
+		})
+	}
+
+	edit(id) {
+		this.#display("edit").then(() => {
+			let cardCount = 0;
+			this.Model.getSetData(id).then((set) => {
+				cardCount = set.cards.length;
+				console.log(cardCount, set);
+
+				$('#title').val(set.title);
+
+				set.cards.forEach((card, idx) => {
+					$("#edit-cards").append(`							
+						<div class="edit-card" id="${idx}card">
+							<hr>
+							<span onclick="removeCard(${idx})">X</span>
+							<label>Front</label>
+							<input id="${idx}front" class="front" type="text" value='${card.front}'>
+							<label>Back</label>
+							<input id="${idx}back" class="back" type="text" value='${card.back}'>
+						</div>
+					`)
+				})
+			})	
+
+			$("#add-card").on("click", () => {
+				$("#edit-cards").append(`
+					<div class="edit-card" id="${cardCount}card">
+						<hr>
+						<span onclick="removeCard(${cardCount})">X</span>
+						<label>Front</label>
+						<input id="${cardCount}front" class="front" type="text">
+						<label>Back</label>
+						<input id="${cardCount}back" class="back" type="text">
+					</div>
+				`)
+				cardCount++;
+			})	
+
+			$("#submit-set").on("click", (e) => {
+				let title = $("#title").val();
+
+				if(!title) {
+					throw this.#alarm('Title must be filled out!');
+				}
+
+				let cardElements = Array.from(document.getElementsByClassName('edit-card'));
+				console.log(cardElements)
+
+				let cards = [];
+
+				cardElements.forEach((card) => {
+					let idx = card.id.match(/\d/g).join("");
+					let front = $("#"+idx+'front').val();
+					let back = $("#"+idx+'back').val();
+
+					if (!front || !back) {
+						throw this.#alarm('All cards must be completely filled out!');
+					}
+
+					cards.push({
+						front: front,
+						back: back
+					})
+
+				})
+
+				this.Model.updateSet(id, title, cards).then((result) => {
+					window.location.href = `#viewSet/${id}`;
+				})
+
+			})
+		})
 	}
 
 	search() {
-		this.#display("search");
+		this.#display("search").then(() => {
+			$("#searchBtn").on('click', () => {
+				let terms = $("#searchBox").val();
+				$("#searchBox").val('');
+				$("#searchResults").html(``);
+
+				this.Model.searchSets(terms).then((result) => {
+					$("#searchResults").append(result);
+
+					$('.setInList h3').on('click', (e) => {
+						let id = e.currentTarget.getAttribute('data-id');
+						window.location.hash = "#viewSet/" + id;
+					})
+				})
+			})	
+		})
 	}
 
 	profile() {
