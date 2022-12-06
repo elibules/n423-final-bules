@@ -8,11 +8,13 @@ const controller = new Controller(firebaseConfig);
  * hash, call the controller function that matches the default route
  */
 function route() {
-  let hash = window.location.hash.replace("#", "");
+  let hash = window.location.hash.replace("#", "").split("/");
 	controller.init().then(() => {
-  if (hash) {
-    controller[hash]();
-  } else {
+  if (hash[0] && hash[1]) {
+    controller[hash[0]](hash[1]);
+	} else if(hash[0]) {
+		controller[hash[0]]();
+	} else {
     controller["mySets"]();
   }
 	})

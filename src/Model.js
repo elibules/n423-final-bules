@@ -71,4 +71,23 @@ export default class Model {
 
 		return html;
 	}
+
+	async viewSet(id) {
+		let q = await getDoc(doc(this.db, "sets", id))
+		let data = q.data();
+		let html = ``;
+
+		html += `<h2>${data.title}</h2>`
+
+		data.cards.forEach((card, idx) => {
+			html += `
+				<div class="card" id="card${idx}" data-show="front">
+					<div id="${idx}Front">${card.front}</div>
+					<div sid="${idx}Back" style="display: none">${card.back}</div>
+				</div>
+			`;
+		})
+
+		return html;
+	}
 }

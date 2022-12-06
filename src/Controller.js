@@ -69,7 +69,7 @@ export default class Controller {
 				$('#setList').html(result);
 				$('.setInList').on('click', (e) => {
 					let id = e.currentTarget.getAttribute('data-id');
-					console.log(id);	
+					window.location.hash = "#viewSet/" + id;
 				})
 			})
 		})
@@ -82,8 +82,21 @@ export default class Controller {
 				$('#setList').html(result);
 				$('.setInList').on('click', (e) => {
 					let id = e.currentTarget.getAttribute('data-id');
-					console.log(id);	
+					window.location.hash = "#viewSet/" + id;
 				})
+			})
+		})
+	}
+
+	viewSet(id) {
+		this.#display("viewSet").then(() => {
+			if(id == null) {
+				$("#viewSetPage").html(`<h1>No Set of Cards Selected</h1>`);
+				return;
+			}
+			this.Model.viewSet(id).then((content) => {
+				$("#viewSetPage").append(content);
+
 			})
 		})
 	}
