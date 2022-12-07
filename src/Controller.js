@@ -2,140 +2,139 @@ import Model from "./Model";
 import Auth from "./Auth";
 
 export default class Controller {
-	static config;
+  static config;
 
-	constructor(firebaseConfig) {
-		this.config = firebaseConfig;
-		this.Model = new Model(this.config);
-		this.Auth = new Auth(this.config);
+  constructor(firebaseConfig) {
+    this.config = firebaseConfig;
+    this.Model = new Model(this.config);
+    this.Auth = new Auth(this.config);
+  }
 
-	}
+  async init() {
+    await this.Auth.user;
+  }
 
-	async init() {
-		await this.Auth.user;
-	}
+  #alarm(message) {
+    alert(message);
+  }
 
-	#alarm(message) {
-		alert(message);
-	}
+  async #display(page) {
+    if (this.Auth.user == null && page != "login") {
+      this.#login();
+      return;
+    }
+    await this.Model.fetchContent(page).then((result) => {
+      $("#app").html(`<section id="${page}Page">` + result + `</section>`);
+    });
+  }
 
-	async #display(page) {
-		if (this.Auth.user == null && page != "login") {
-			this.#login();
-			return;
-		}
-		await this.Model.fetchContent(page).then((result) => {
-			$("#app").html(`<section id="${page}Page">` + result + `</section>`);
-		});
-	}
+  #login() {
+    this.#display("login").then(() => {
+      $("#login p").on("click", () => {
+        $("#register").css("display", "block");
+        $("#login").css("display", "none");
+      });
 
-	#login() {
-		this.#display("login").then(() => {
+      $("#register p").on("click", () => {
+        $("#register").css("display", "none");
+        $("#login").css("display", "block");
+      });
 
-			$("#login p").on('click', () => {
-				$("#register").css("display", "block")
-				$("#login").css("display", "none")
-			});
+      $("#submitLogin").on("click", () => {
+        this.Auth.login($("#lEmail").val(), $("#lPassword").val()).then(() => {
+          let hash = window.location.hash.replace("#", "");
+          if (hash) {
+            this[hash]();
+          } else {
+            this.mySets();
+          }
+        });
+      });
 
-			$("#register p").on('click', () => {
-				$("#register").css("display", "none")
-				$("#login").css("display", "block")
-			});
+      $("#submitRegister").on("click", () => {
+        this.Auth.register($("#rEmail").val(), $("#rPassword").val()).then(
+          () => {
+            let hash = window.location.hash.replace("#", "");
+            if (hash) {
+              this[hash]();
+            } else {
+              this.mySets();
+            }
+          }
+        );
+      });
+    });
+  }
 
-			$('#submitLogin').on('click', () => {
-				this.Auth.login($("#lEmail").val(), $("#lPassword").val()).then(() => {
-					let hash = window.location.hash.replace("#", "");
-					if (hash) {
-						this[hash]();
-					} else {
-						this.mySets();
-					}
-				});
-			});
+  mySets() {
+    this.#display("mySets").then(() => {
+      this.Model.getUserSets().then((result) => {
+        console.log(result);
+        $("#setList").html(result);
 
-			$('#submitRegister').on('click', () => {
-				this.Auth.register($("#rEmail").val(), $("#rPassword").val()).then(() => {
-					let hash = window.location.hash.replace("#", "");
-					if (hash) {
-						this[hash]();
-					} else {
-						this.mySets();
-					}
-				})
-			})
-		});
-	}
+        $(".setInList h3").on("click", (e) => {
+          let id = e.currentTarget.getAttribute("data-id");
+          window.location.hash = "#viewSet/" + id;
+        });
 
-	mySets() {
-		this.#display("mySets").then(() => {
-			this.Model.getUserSets().then((result) => {
-				console.log(result)
-				$('#setList').html(result);
+        $(".delete").on("click", (e) => {
+          if (!confirm("Are you sure you want to delete this set?")) return;
 
-				$('.setInList h3').on('click', (e) => {
-					let id = e.currentTarget.getAttribute('data-id');
-					window.location.hash = "#viewSet/" + id;
-				})
-				
-				$('.delete').on('click', (e) => {
-					if(!confirm('Are you sure you want to delete this set?')) return;
+          let id = e.currentTarget.getAttribute("data-id");
+          this.Model.deleteSet(id).then((result) => {
+            window.location.reload();
+          });
+        });
+      });
+    });
+  }
 
-					let id = e.currentTarget.getAttribute('data-id');
-					this.Model.deleteSet(id).then((result) => {
-						window.location.reload();
-					});
-				});
-			})
-		})
-	}
+  favorites() {
+    this.#display("favorites").then(() => {
+      this.Model.getFavoriteSets().then((result) => {
+        $("#setList").html(result);
+        $(".setInList").on("click", (e) => {
+          let id = e.currentTarget.getAttribute("data-id");
+          window.location.hash = "#viewSet/" + id;
+        });
+      });
+    });
+  }
 
-	favorites() {
-		this.#display("favorites").then(() => {
-			this.Model.getFavoriteSets().then((result) => {
-				$('#setList').html(result);
-				$('.setInList').on('click', (e) => {
-					let id = e.currentTarget.getAttribute('data-id');
-					window.location.hash = "#viewSet/" + id;
-				})
-			})
-		})
-	}
+  viewSet(id) {
+    this.#display("viewSet").then(() => {
+      if (id == null) {
+        $("#viewSetPage").html(`<h1>No Set of Cards Selected</h1>`);
+        return;
+      }
+      this.Model.viewSet(id).then((content) => {
+        $("#viewSetPage").append(content);
+        $(".card").on("click", (e) => {
+          let card = e.currentTarget;
+          let idx = card.id.match(/\d/g).join("");
+          let shown = card.getAttribute("data-show");
 
-	viewSet(id) {
-		this.#display("viewSet").then(() => {
-			if(id == null) {
-				$("#viewSetPage").html(`<h1>No Set of Cards Selected</h1>`);
-				return;
-			}
-			this.Model.viewSet(id).then((content) => {
-				$("#viewSetPage").append(content);
-				$(".card").on("click", (e) => {
+          $("#" + idx + shown).hide();
+          if (shown == "front") {
+            $("#" + idx + "back").show();
+            card.setAttribute("data-show", "back");
+          } else {
+            $("#" + idx + "front").show();
+            card.setAttribute("data-show", "front");
+          }
+        });
+      });
+    });
+  }
 
-					let card = e.currentTarget;
-					let idx = card.id.match(/\d/g).join("");
-					let shown = card.getAttribute('data-show');
-					
-					$("#"+idx+shown).hide();
-					if(shown == 'front') {
-						$("#"+idx+'back').show();
-						card.setAttribute('data-show', 'back');
-					} else {
-						$("#"+idx+'front').show();	
-						card.setAttribute('data-show', 'front');
-					}
-				})
-			})
-		})
-	}
+  builder() {
+    this.#display("builder").then(() => {
+      let cardCount = 0;
 
-	builder() {
-		this.#display("builder").then(() => {
-			let cardCount = 0;
+      $("#add-card").on("click", () => {
+        cardCount++;
 
-			$("#add-card").on("click", () => {
-				cardCount++;
-
-				$("#build-cards").append(`
+        $("#build-cards").append(`
 					<div class="build-card" id="${cardCount}card">
 						<hr>
 						<span onclick="removeCard(${cardCount})">X</span>
@@ -144,58 +143,58 @@ export default class Controller {
 						<label>Back</label>
 						<input id="${cardCount}back" class="back" type="text">
 					</div>
-				`)
-			})	
+				`);
+      });
 
-			$("#submit-set").on("click", (e) => {
-				let title = $("#title").val();
+      $("#submit-set").on("click", (e) => {
+        let title = $("#title").val();
 
-				if(!title) {
-					throw this.#alarm('Title must be filled out!');
-				}
+        if (!title) {
+          throw this.#alarm("Title must be filled out!");
+        }
 
-				let cardElements = Array.from(document.getElementsByClassName('build-card'));
-				console.log(cardElements)
+        let cardElements = Array.from(
+          document.getElementsByClassName("build-card")
+        );
+        console.log(cardElements);
 
-				let cards = [];
+        let cards = [];
 
-				cardElements.forEach((card) => {
-					let idx = card.id.match(/\d/g).join("");
-					let front = $("#"+idx+'front').val();
-					let back = $("#"+idx+'back').val();
+        cardElements.forEach((card) => {
+          let idx = card.id.match(/\d/g).join("");
+          let front = $("#" + idx + "front").val();
+          let back = $("#" + idx + "back").val();
 
-					if (!front || !back) {
-						throw this.#alarm('All cards must be completely filled out!');
-					}
+          if (!front || !back) {
+            throw this.#alarm("All cards must be completely filled out!");
+          }
 
-					cards.push({
-						front: front,
-						back: back
-					})
+          cards.push({
+            front: front,
+            back: back,
+          });
+        });
 
-				})
+        this.Model.publishSet(title, cards).then((result) => {
+          if (result) {
+            window.location.href = "#mySets";
+          }
+        });
+      });
+    });
+  }
 
-				this.Model.publishSet(title, cards).then((result) => {
-					if(result) {
-						window.location.href = "#mySets";
-					}
-				})
+  edit(id) {
+    this.#display("edit").then(() => {
+      let cardCount = 0;
+      this.Model.getSetData(id).then((set) => {
+        cardCount = set.cards.length;
+        console.log(cardCount, set);
 
-			})
-		})
-	}
+        $("#title").val(set.title);
 
-	edit(id) {
-		this.#display("edit").then(() => {
-			let cardCount = 0;
-			this.Model.getSetData(id).then((set) => {
-				cardCount = set.cards.length;
-				console.log(cardCount, set);
-
-				$('#title').val(set.title);
-
-				set.cards.forEach((card, idx) => {
-					$("#edit-cards").append(`							
+        set.cards.forEach((card, idx) => {
+          $("#edit-cards").append(`							
 						<div class="edit-card" id="${idx}card">
 							<hr>
 							<span onclick="removeCard(${idx})">X</span>
@@ -204,12 +203,12 @@ export default class Controller {
 							<label>Back</label>
 							<input id="${idx}back" class="back" type="text" value='${card.back}'>
 						</div>
-					`)
-				})
-			})	
+					`);
+        });
+      });
 
-			$("#add-card").on("click", () => {
-				$("#edit-cards").append(`
+      $("#add-card").on("click", () => {
+        $("#edit-cards").append(`
 					<div class="edit-card" id="${cardCount}card">
 						<hr>
 						<span onclick="removeCard(${cardCount})">X</span>
@@ -218,66 +217,66 @@ export default class Controller {
 						<label>Back</label>
 						<input id="${cardCount}back" class="back" type="text">
 					</div>
-				`)
-				cardCount++;
-			})	
+				`);
+        cardCount++;
+      });
 
-			$("#submit-set").on("click", (e) => {
-				let title = $("#title").val();
+      $("#submit-set").on("click", (e) => {
+        let title = $("#title").val();
 
-				if(!title) {
-					throw this.#alarm('Title must be filled out!');
-				}
+        if (!title) {
+          throw this.#alarm("Title must be filled out!");
+        }
 
-				let cardElements = Array.from(document.getElementsByClassName('edit-card'));
-				console.log(cardElements)
+        let cardElements = Array.from(
+          document.getElementsByClassName("edit-card")
+        );
+        console.log(cardElements);
 
-				let cards = [];
+        let cards = [];
 
-				cardElements.forEach((card) => {
-					let idx = card.id.match(/\d/g).join("");
-					let front = $("#"+idx+'front').val();
-					let back = $("#"+idx+'back').val();
+        cardElements.forEach((card) => {
+          let idx = card.id.match(/\d/g).join("");
+          let front = $("#" + idx + "front").val();
+          let back = $("#" + idx + "back").val();
 
-					if (!front || !back) {
-						throw this.#alarm('All cards must be completely filled out!');
-					}
+          if (!front || !back) {
+            throw this.#alarm("All cards must be completely filled out!");
+          }
 
-					cards.push({
-						front: front,
-						back: back
-					})
+          cards.push({
+            front: front,
+            back: back,
+          });
+        });
 
-				})
+        this.Model.updateSet(id, title, cards).then((result) => {
+          window.location.href = `#viewSet/${id}`;
+        });
+      });
+    });
+  }
 
-				this.Model.updateSet(id, title, cards).then((result) => {
-					window.location.href = `#viewSet/${id}`;
-				})
+  search() {
+    this.#display("search").then(() => {
+      $("#searchBtn").on("click", () => {
+        let terms = $("#searchBox").val();
+        $("#searchBox").val("");
+        $("#searchResults").html(``);
 
-			})
-		})
-	}
+        this.Model.searchSets(terms).then((html) => {
+          $("#searchResults").html(html);
 
-	search() {
-		this.#display("search").then(() => {
-			$("#searchBtn").on('click', () => {
-				let terms = $("#searchBox").val();
-				$("#searchBox").val('');
-				$("#searchResults").html(``);
+          $(".setInList h3").on("click", (e) => {
+            let id = e.currentTarget.getAttribute("data-id");
+            window.location.hash = "#viewSet/" + id;
+          });
+        });
+      });
+    });
+  }
 
-				this.Model.searchSets(terms).then((result) => {
-					$("#searchResults").append(result);
-
-					$('.setInList h3').on('click', (e) => {
-						let id = e.currentTarget.getAttribute('data-id');
-						window.location.hash = "#viewSet/" + id;
-					})
-				})
-			})	
-		})
-	}
-
-	profile() {
-		this.#display("profile");
-	}
+  profile() {
+    this.#display("profile");
+  }
 }

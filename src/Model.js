@@ -18,167 +18,191 @@ export default class Model {
     this.db = getFirestore(config);
   }
 
-	createKeywords(str) {
-		return str.split(' ');
-	}
+  createKeywords(str) {
+    return str.split(" ");
+  }
 
   async fetchContent(file) {
     return await $.get("pages/" + file + ".html");
   }
 
-	async getUserSets() {
-		const user = JSON.parse(localStorage.getItem('user'))
+  async getUserSets() {
+    const user = JSON.parse(localStorage.getItem("user"));
 
-		const q = await getDocs(query(collection(this.db, "sets"),
-		where("UID", "==", user.uid)));
-		
-		// return q;
-		let html = ``;
+    const q = await getDocs(
+      query(collection(this.db, "sets"), where("UID", "==", user.uid))
+    );
 
-		q.forEach((result) => {
-			let id = result.id;
-			let data = result.data();
+    // return q;
+    let html = ``;
 
-			html += `
+    q.forEach((result) => {
+      let id = result.id;
+      let data = result.data();
+
+      html += `
 				<div class="setInList" data-id="${id}">
 					<h3 data-id="${id}">${data.title}</h3>
 					<span onclick="window.location.href='#edit/${id}'">&#9998;</span>
 					<span class='delete' data-id="${id}">&#128465;</span>
 				</div>
 			`;
-		})
-		return html;
-	}
+    });
+    return html;
+  }
 
-	async getFavoriteSets() {
-		const user = JSON.parse(localStorage.getItem('user'))
+  async getFavoriteSets() {
+    const user = JSON.parse(localStorage.getItem("user"));
 
-		const q = await getDocs(query(collection(this.db, "favorites"),
-		where("UID", "==", user.uid)));
-		
-		// return q;
-		let html = ``;
+    const q = await getDocs(
+      query(collection(this.db, "favorites"), where("UID", "==", user.uid))
+    );
 
-		q.forEach((result) => {
-			let data = result.data();
+    // return q;
+    let html = ``;
 
-			let sets = data.sets;
+    q.forEach((result) => {
+      let data = result.data();
 
-			sets.forEach((set) => {
-				html += `
+      let sets = data.sets;
+
+      sets.forEach((set) => {
+        html += `
 					<div class="setInList" data-id="${set.id}">
 						<h3>${set.title}</h3>
 					</div>
 				`;
-			})
-		})
+      });
+    });
 
-		return html;
-	}
+    return html;
+  }
 
-	async viewSet(id) {
-		let q = await getDoc(doc(this.db, "sets", id))
-		let data = q.data();
-		let html = ``;
+  async viewSet(id) {
+    let q = await getDoc(doc(this.db, "sets", id));
+    let data = q.data();
+    let html = ``;
 
-		html += `<h2>${data.title}</h2>`
+    html += `<h2>${data.title}</h2>`;
 
-		data.cards.forEach((card, idx) => {
-			html += `
+    data.cards.forEach((card, idx) => {
+      html += `
 				<div class="card" id="card${idx}" data-show="front">
 					<div id="${idx}front">${card.front}</div>
 					<div id="${idx}back" style="display: none">${card.back}</div>
 				</div>
 			`;
-		})
+    });
 
-		return html;
-	}
+    return html;
+  }
 
-	async publishSet(title, cards) {
-		let user = JSON.parse(localStorage.getItem('user'));
-		let set = {
-			UID: user.uid,
-			keywords: this.createKeywords(title), 
-			cards: cards,
-			title: title
-		}
-		try {
-			let result = await addDoc(collection(this.db, "sets"), set)
-			return result;
-		} catch(e) {
-			return e;
-		}
-	}
+  async publishSet(title, cards) {
+    let user = JSON.parse(localStorage.getItem("user"));
+    let set = {
+      UID: user.uid,
+      keywords: this.createKeywords(title),
+      cards: cards,
+      title: title,
+    };
+    try {
+      let result = await addDoc(collection(this.db, "sets"), set);
+      return result;
+    } catch (e) {
+      return e;
+    }
+  }
 
-	async updateSet(id, title, cards) {
-		let user = JSON.parse(localStorage.getItem('user'));
-		
-		let docRef = doc(this.db, "sets", id);
+  async updateSet(id, title, cards) {
+    let user = JSON.parse(localStorage.getItem("user"));
 
-		let set = {
-			UID: user.uid, 
-			keywords: this.createKeywords(title), 
-			cards: cards, 
-			title: title
-		}
+    let docRef = doc(this.db, "sets", id);
 
-		try {
-			let result = await setDoc(docRef, set);
-			return result;
-		} catch(e) {
-			return e;
-		}
-	}
+    let set = {
+      UID: user.uid,
+      keywords: this.createKeywords(title),
+      cards: cards,
+      title: title,
+    };
 
-	async deleteSet(id) {
-		try {
-			let result = await deleteDoc(doc(this.db, 'sets', id))
-			return result;
-		} catch (e) {
-			return e;
-		}
-	}
+    try {
+      let result = await setDoc(docRef, set);
+      return result;
+    } catch (e) {
+      return e;
+    }
+  }
 
-	async getSetData(id) {
-		let q = await getDoc(doc(this.db, "sets", id))
-		let data = q.data();
-		return data;
-	}
+  async deleteSet(id) {
+    try {
+      let result = await deleteDoc(doc(this.db, "sets", id));
+      return result;
+    } catch (e) {
+      return e;
+    }
+  }
 
-	async searchSets(terms) {
-		let user = JSON.parse(localStorage.getItem('user'));
+  async getSetData(id) {
+    let q = await getDoc(doc(this.db, "sets", id));
+    let data = q.data();
+    return data;
+  }
 
-		let results = [];
+  async searchSets(terms) {
+    let user = JSON.parse(localStorage.getItem("user"));
 
-		// terms.forEach((term) => {
-		// const r = await getDocs(query(
-		// 	collection(this.db, "sets"),
-		// 	where('keywords', 'array-contains', term)));
+    let results = [];
 
-		// 	for(let i = 0; i < results.length; i++) {
-		// 		// do stuff
-		// 	}
-		// })
-		
-		let html = `<h2>Search results for '${terms}'</h2>`;
+    let termsArray = terms.split(" ");
 
-		results.forEach((doc) => {
-			let set = doc.data();
-			let id = doc.id;
-			if(set.UID != user.uid) {
-				html += `	
-				<div class="setInList" data-id="${id}">
-					<h3 data-id="${id}">${set.title}</h3>
+    const doSearch = async (term) => {
+      return await getDocs(
+        query(
+          collection(this.db, "sets"),
+          where("keywords", "array-contains", term)
+        )
+      );
+    };
+
+    for (let i = 0; i < termsArray.length; i++) {
+      let snap = await doSearch(termsArray[i]);
+      snap.forEach((set) => {
+        let data = set.data();
+        if (data.UID == user.uid) return;
+        results.push({
+          id: set.id,
+          data: set.data(),
+        });
+      });
+    }
+
+    // debugger;
+
+    const unique = [];
+
+    const fSets = results.filter((set) => {
+      const duplicate = unique.includes(set.id);
+      if (!duplicate) {
+        unique.push(set.id);
+        return true;
+      }
+      return false;
+    });
+
+    let html = `<h2>Search results for '${terms}'</h2>`;
+
+    fSets.forEach((set) => {
+      html += `
+        <div class="setInList" data-id="${set.id}">
+					<h3 data-id="${set.id}">${set.data.title}</h3>
 				</div>
-				`;
-			}
-		})
+      `;
+    });
 
-		if(html == ``) {
-			html = `<h2>No Sets were found for '${terms}'</h2>`
-		}
+    if (html == `<h2>Search results for '${terms}'</h2>`) {
+      html = `<h2>No Sets were found for '${terms}'</h2>`;
+    }
 
-		return html;
-	}
+    return html;
+  }
 }
