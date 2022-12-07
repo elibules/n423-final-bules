@@ -97,13 +97,14 @@ export default class Model {
     return html;
   }
 
-  async publishSet(title, cards) {
+  async publishSet(title, cards, vis) {
     let user = JSON.parse(localStorage.getItem("user"));
     let set = {
       UID: user.uid,
       keywords: this.createKeywords(title),
       cards: cards,
       title: title,
+      visibility: vis,
     };
     try {
       let result = await addDoc(collection(this.db, "sets"), set);
@@ -113,7 +114,7 @@ export default class Model {
     }
   }
 
-  async updateSet(id, title, cards) {
+  async updateSet(id, title, cards, vis) {
     let user = JSON.parse(localStorage.getItem("user"));
 
     let docRef = doc(this.db, "sets", id);
@@ -123,6 +124,7 @@ export default class Model {
       keywords: this.createKeywords(title),
       cards: cards,
       title: title,
+      visibility: vis,
     };
 
     try {
@@ -168,7 +170,7 @@ export default class Model {
       let snap = await doSearch(termsArray[i]);
       snap.forEach((set) => {
         let data = set.data();
-        if (data.UID == user.uid) return;
+        if (data.UID == user.uid || data.visibility === "false") return;
         results.push({
           id: set.id,
           data: set.data(),

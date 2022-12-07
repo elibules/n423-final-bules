@@ -139,15 +139,16 @@ export default class Controller {
 						<hr>
 						<span onclick="removeCard(${cardCount})">X</span>
 						<label>Front</label>
-						<input id="${cardCount}front" class="front" type="text">
+						<input required id="${cardCount}front" class="front" type="text">
 						<label>Back</label>
-						<input id="${cardCount}back" class="back" type="text">
+						<input required id="${cardCount}back" class="back" type="text">
 					</div>
 				`);
       });
 
       $("#submit-set").on("click", (e) => {
         let title = $("#title").val();
+        let vis = $("#vis").val();
 
         if (!title) {
           throw this.#alarm("Title must be filled out!");
@@ -175,7 +176,7 @@ export default class Controller {
           });
         });
 
-        this.Model.publishSet(title, cards).then((result) => {
+        this.Model.publishSet(title, cards, vis).then((result) => {
           if (result) {
             window.location.href = "#mySets";
           }
@@ -193,15 +194,19 @@ export default class Controller {
 
         $("#title").val(set.title);
 
+        set.visibility === "true"
+          ? $("#vis option[value='true']").attr("selected", true)
+          : $("#vis option[value='false']").attr("selected", true);
+
         set.cards.forEach((card, idx) => {
           $("#edit-cards").append(`							
 						<div class="edit-card" id="${idx}card">
 							<hr>
 							<span onclick="removeCard(${idx})">X</span>
 							<label>Front</label>
-							<input id="${idx}front" class="front" type="text" value='${card.front}'>
+							<input required id="${idx}front" class="front" type="text" value='${card.front}'>
 							<label>Back</label>
-							<input id="${idx}back" class="back" type="text" value='${card.back}'>
+							<input required id="${idx}back" class="back" type="text" value='${card.back}'>
 						</div>
 					`);
         });
@@ -213,9 +218,9 @@ export default class Controller {
 						<hr>
 						<span onclick="removeCard(${cardCount})">X</span>
 						<label>Front</label>
-						<input id="${cardCount}front" class="front" type="text">
+						<input required id="${cardCount}front" class="front" type="text">
 						<label>Back</label>
-						<input id="${cardCount}back" class="back" type="text">
+						<input required id="${cardCount}back" class="back" type="text">
 					</div>
 				`);
         cardCount++;
@@ -223,6 +228,7 @@ export default class Controller {
 
       $("#submit-set").on("click", (e) => {
         let title = $("#title").val();
+        let vis = $("#vis").val();
 
         if (!title) {
           throw this.#alarm("Title must be filled out!");
@@ -250,7 +256,7 @@ export default class Controller {
           });
         });
 
-        this.Model.updateSet(id, title, cards).then((result) => {
+        this.Model.updateSet(id, title, cards, vis).then((result) => {
           window.location.href = `#viewSet/${id}`;
         });
       });

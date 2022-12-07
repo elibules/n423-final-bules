@@ -1,25 +1,30 @@
 <h1>Create New Flash Card Set</h1>
 <div id="build-form" class="set-form">
-	<label for="title">Title</label>
-	<input id="title" type="text">
-	<label for="build-cards">Cards in Set</label>
-	<div id="build-cards">
-		<div class="build-card" id="0card">
-			<hr>
-			<span class="remove-card" onclick="removeCard(0)">X</span>
-			<label>Front</label>
-			<input id="0front" class="front" type="text">
-			<label>Back</label>
-			<input id="0back" class="back" type="text">
-		</div>
-	</div>
-	<button id="add-card">Add Card</button>
-	<button id="submit-set">Submit Set</button>
+  <label for="title">Title</label>
+  <input required id="title" type="text" />
+  <label for="vis">Visibility</label>
+  <select required name="vis" id="vis">
+    <option value="true">Public</option>
+    <option value="false">Private</option>
+  </select>
+  <label for="build-cards">Cards in Set</label>
+  <div id="build-cards">
+    <div class="build-card" id="0card">
+      <hr />
+      <span class="remove-card" onclick="removeCard(0)">X</span>
+      <label>Front</label>
+      <input required id="0front" class="front" type="text" />
+      <label>Back</label>
+      <input required id="0back" class="back" type="text" />
+    </div>
+  </div>
+  <button id="add-card">Add Card</button>
+  <button id="submit-set">Submit Set</button>
 </div>
 
 <script>
-	function removeCard(id) {
-		if (id == 0) return;
-		$("#" + id + "card").remove();
-	}
+  function removeCard(id) {
+    if (id == 0) return;
+    $("#" + id + "card").remove();
+  }
 </script>
