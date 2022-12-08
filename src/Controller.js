@@ -52,17 +52,41 @@ export default class Controller {
       });
 
       $("#submitRegister").on("click", () => {
-        this.Auth.register($("#rEmail").val(), $("#rPassword").val()).then(
-          () => {
-            this.Model.createFavorites();
-            let hash = window.location.hash.replace("#", "");
-            if (hash) {
-              this[hash]();
-            } else {
-              this.mySets();
-            }
+        if (
+          !$("#rUsername").val() ||
+          !$("#rEmail").val() ||
+          !$("#rPassword").val()
+        ) {
+          throw this.#alarm("All fields must be filled out");
+        }
+        this.Auth.register(
+          $("#rUsername").val(),
+          $("#rEmail").val(),
+          $("#rPassword").val()
+        ).then(() => {
+          this.Model.createFavorites();
+          let hash = window.location.hash.replace("#", "");
+          if (hash) {
+            this[hash]();
+          } else {
+            this.mySets();
           }
-        );
+        });
+      });
+
+      $("#signInWithGoogle").on("click", () => {
+        this.Auth.googleSignIn().then(() => {
+          this.Model.getFavoriteSets().then((result) => {
+            console.log(result);
+            if (result === `No favorites`) {
+              this.Model.createFavorites().then(() => {
+                location.reload();
+              });
+            } else {
+              location.reload();
+            }
+          });
+        });
       });
     });
   }
@@ -312,6 +336,10 @@ export default class Controller {
   }
 
   profile() {
-    this.#display("profile");
+    this.#display("profile").then(() => {
+      $("#signOut").on("click", () => {
+        this.Auth.signOut();
+      });
+    });
   }
 }

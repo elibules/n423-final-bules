@@ -69,11 +69,11 @@ export default class Model {
       query(collection(this.db, "favorites"), where("UID", "==", user.uid))
     );
 
-    let html = ``;
+    let html = `No favorites`;
 
     for (let result of q.docs) {
       let data = result.data();
-
+      html = ``;
       // This is the favorites doc id
       let id = result.id;
 
@@ -137,6 +137,7 @@ export default class Model {
     let data = q.data();
     let html = ``;
 
+    html += `<h3>${data.username}</h3>`;
     html += `<h2>${data.title}</h2>`;
 
     data.cards.forEach((card, idx) => {
@@ -155,6 +156,7 @@ export default class Model {
     let user = JSON.parse(localStorage.getItem("user"));
     let set = {
       UID: user.uid,
+      username: user.displayName,
       keywords: this.createKeywords(title),
       cards: cards,
       title: title,
@@ -170,11 +172,13 @@ export default class Model {
 
   async updateSet(id, title, cards, vis) {
     let user = JSON.parse(localStorage.getItem("user"));
+    console.log(user.displayName);
 
     let docRef = doc(this.db, "sets", id);
 
     let set = {
       UID: user.uid,
+      username: user.displayName,
       keywords: this.createKeywords(title),
       cards: cards,
       title: title,

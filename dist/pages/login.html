@@ -1,19 +1,23 @@
 <div id="login">
-<h1>Please Login</h1>
+  <h1>Please Login</h1>
   <label for="email">Email</label>
-  <input type="email" id="lEmail" />
+  <input required type="email" id="lEmail" />
   <label for="password">Password</label>
-  <input type="password" id="lPassword" />
+  <input required type="password" id="lPassword" />
   <button id="submitLogin">Login</button>
-	<p id='lSwitch'>Need an Account? Register Here</p>
+  <p id="lSwitch">Need an Account? Register Here</p>
 </div>
 
 <div id="register" style="display: none">
-	<h1>Register an Account</h1>
+  <h1>Register an Account</h1>
+  <label for="username">Username</label>
+  <input required type="text" id="rUsername" />
   <label for="email">Email</label>
-  <input type="email" id="rEmail" />
+  <input required type="email" id="rEmail" />
   <label for="password">Password</label>
-  <input type="password" id="rPassword" />
+  <input required type="password" id="rPassword" />
   <button id="submitRegister">Register</button>
-	<p id='rSwitch'>Already have an Account? Login here</p>
+  <p id="rSwitch">Already have an Account? Login here</p>
 </div>
+
+<button id="signInWithGoogle">Sign In With Google</button>
