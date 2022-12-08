@@ -54,6 +54,7 @@ export default class Controller {
       $("#submitRegister").on("click", () => {
         this.Auth.register($("#rEmail").val(), $("#rPassword").val()).then(
           () => {
+            this.Model.createFavorites();
             let hash = window.location.hash.replace("#", "");
             if (hash) {
               this[hash]();
@@ -69,7 +70,6 @@ export default class Controller {
   mySets() {
     this.#display("mySets").then(() => {
       this.Model.getUserSets().then((result) => {
-        console.log(result);
         $("#setList").html(result);
 
         $(".setInList h3").on("click", (e) => {
@@ -93,9 +93,26 @@ export default class Controller {
     this.#display("favorites").then(() => {
       this.Model.getFavoriteSets().then((result) => {
         $("#setList").html(result);
-        $(".setInList").on("click", (e) => {
+
+        $(".setInList h3").on("click", (e) => {
           let id = e.currentTarget.getAttribute("data-id");
           window.location.hash = "#viewSet/" + id;
+        });
+
+        $(".favorite").on("click", (e) => {
+          if (
+            !confirm(
+              "Are you sure you want to remove this set from your favorites?"
+            )
+          ) {
+            return;
+          }
+
+          let docId = e.currentTarget.getAttribute("data-docId");
+          let setId = e.currentTarget.getAttribute("data-setId");
+          this.Model.removeFavorite(docId, setId).then((result) => {
+            $(e.currentTarget).parent().remove();
+          });
         });
       });
     });
@@ -157,7 +174,6 @@ export default class Controller {
         let cardElements = Array.from(
           document.getElementsByClassName("build-card")
         );
-        console.log(cardElements);
 
         let cards = [];
 
@@ -190,7 +206,6 @@ export default class Controller {
       let cardCount = 0;
       this.Model.getSetData(id).then((set) => {
         cardCount = set.cards.length;
-        console.log(cardCount, set);
 
         $("#title").val(set.title);
 
@@ -237,7 +252,6 @@ export default class Controller {
         let cardElements = Array.from(
           document.getElementsByClassName("edit-card")
         );
-        console.log(cardElements);
 
         let cards = [];
 
@@ -276,6 +290,21 @@ export default class Controller {
           $(".setInList h3").on("click", (e) => {
             let id = e.currentTarget.getAttribute("data-id");
             window.location.hash = "#viewSet/" + id;
+          });
+
+          $(".favorite").on("click", (e) => {
+            let docId = e.currentTarget.getAttribute("data-docId");
+            let setId = e.currentTarget.getAttribute("data-setId");
+
+            if (e.currentTarget.classList.contains("heart_plus")) {
+              e.currentTarget.classList.remove("heart_plus");
+              this.Model.addFavorite(docId, setId);
+              e.currentTarget.classList.add("heart_filled");
+            } else {
+              e.currentTarget.classList.remove("heart_filled");
+              this.Model.removeFavorite(docId, setId);
+              e.currentTarget.classList.add("heart_plus");
+            }
           });
         });
       });

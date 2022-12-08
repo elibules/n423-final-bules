@@ -1,0 +1,15 @@
+.favorite {
+    height: 25px;
+    width: 25px;
+    background-size: contain;
+    background-position: center;
+    display: inline-block;
+}
+
+.heart_filled {
+    background-image: url("../img/heart_filled.svg");
+}
+
+.heart_plus {
+    background-image: url("../img/heart_plus.svg");
+}
