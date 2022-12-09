@@ -26,28 +26,58 @@ export default class Model {
     return await $.get("pages/" + file + ".html");
   }
 
-  async getUserSets() {
+  async getUserSets(uid) {
     const user = JSON.parse(localStorage.getItem("user"));
-
     const q = await getDocs(
-      query(collection(this.db, "sets"), where("UID", "==", user.uid))
+      query(collection(this.db, "sets"), where("UID", "==", uid))
     );
 
     // return q;
     let html = ``;
 
-    q.forEach((result) => {
+    for (let result of q.docs) {
       let id = result.id;
       let data = result.data();
 
-      html += `
+      if (user.uid == data.UID) {
+        html += `
 				<div class="setInList" data-id="${id}">
 					<h3 data-id="${id}">${data.title}</h3>
 					<span onclick="window.location.href='#edit/${id}'">&#9998;</span>
 					<span class='delete' data-id="${id}">&#128465;</span>
 				</div>
 			`;
-    });
+      } else {
+        if (data.visibility === "false") break;
+
+        const q = await getDocs(
+          query(collection(this.db, "favorites"), where("UID", "==", user.uid))
+        );
+
+        let favSets = [];
+        let favId;
+        q.forEach((result) => {
+          let data = result.data();
+          favId = result.id;
+          favSets = data.sets;
+        });
+
+        let favorited = false;
+
+        if (favSets.includes(id)) favorited = true;
+
+        html += `
+        <div class="setInList">
+					<h3 data-id="${id}">${data.title}</h3>
+      `;
+
+        favorited
+          ? (html += `<span class="favorite heart_filled" data-docId="${favId}" data-setId="${id}"></span>`)
+          : (html += `<span class="favorite heart_plus" data-docId="${favId}" data-setId="${id}"></span>`);
+
+        html += `</div>`;
+      }
+    }
     return html;
   }
 
@@ -91,6 +121,8 @@ export default class Model {
       }
     }
 
+    if (html == ``) html = `No favorites`;
+
     return html;
   }
 
@@ -133,12 +165,37 @@ export default class Model {
   }
 
   async viewSet(id) {
+    let user = JSON.parse(localStorage.getItem("user"));
     let q = await getDoc(doc(this.db, "sets", id));
     let data = q.data();
     let html = ``;
 
-    html += `<h3>${data.username}</h3>`;
-    html += `<h2>${data.title}</h2>`;
+    if (data.UID != user.uid) {
+      const qf = await getDocs(
+        query(collection(this.db, "favorites"), where("UID", "==", user.uid))
+      );
+
+      let favSets = [];
+      let favId;
+      qf.forEach((result) => {
+        let data = result.data();
+        favId = result.id;
+        favSets = data.sets;
+      });
+
+      let favorited = false;
+
+      if (favSets.includes(id)) favorited = true;
+
+      html += `<h3 id="setUser" data-uid="${data.UID}" data-uname="${data.username}">${data.username}</h3>`;
+
+      favorited
+        ? (html += `<h2>${data.title}<span class="favorite heart_filled" data-docId="${favId}" data-setId="${id}"></span></h2>`)
+        : (html += `<h2>${data.title}<span class="favorite heart_plus" data-docId="${favId}" data-setId="${id}"></span></h2>`);
+    } else {
+      html += `<h3>${data.username}</h3>`;
+      html += `<h2>${data.title}</h2>`;
+    }
 
     data.cards.forEach((card, idx) => {
       html += `

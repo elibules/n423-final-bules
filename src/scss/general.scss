@@ -1,7 +1,23 @@
+@font-face {
+    font-family: "Lato";
+    src: url("fonts/Lato-Regular.ttf");
+}
+
+@font-face {
+    font-family: "Lato-light";
+    src: url("fonts/Lato-Thin.ttf");
+}
+
+@font-face {
+    font-family: "Lato-bold";
+    src: url("fonts/Lato-Bold.ttf");
+}
+
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: "Lato";
 }
 html,
 body {

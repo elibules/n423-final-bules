@@ -18,6 +18,23 @@ export default class Controller {
     alert(message);
   }
 
+  #favActions() {
+    $(".favorite").on("click", (e) => {
+      let docId = e.currentTarget.getAttribute("data-docId");
+      let setId = e.currentTarget.getAttribute("data-setId");
+
+      if (e.currentTarget.classList.contains("heart_plus")) {
+        e.currentTarget.classList.remove("heart_plus");
+        this.Model.addFavorite(docId, setId);
+        e.currentTarget.classList.add("heart_filled");
+      } else {
+        e.currentTarget.classList.remove("heart_filled");
+        this.Model.removeFavorite(docId, setId);
+        e.currentTarget.classList.add("heart_plus");
+      }
+    });
+  }
+
   async #display(page) {
     if (this.Auth.user == null && page != "login") {
       this.#login();
@@ -41,6 +58,9 @@ export default class Controller {
       });
 
       $("#submitLogin").on("click", () => {
+        if (!$("#lEmail").val() || !$("#lPassword").val()) {
+          throw this.#alarm("All fields must be filled out");
+        }
         this.Auth.login($("#lEmail").val(), $("#lPassword").val()).then(() => {
           let hash = window.location.hash.replace("#", "");
           if (hash) {
@@ -64,13 +84,15 @@ export default class Controller {
           $("#rEmail").val(),
           $("#rPassword").val()
         ).then(() => {
-          this.Model.createFavorites();
-          let hash = window.location.hash.replace("#", "");
-          if (hash) {
-            this[hash]();
-          } else {
-            this.mySets();
-          }
+          this.Model.createFavorites().then(() => {
+            location.reload();
+          });
+          // let hash = window.location.hash.replace("#", "");
+          // if (hash) {
+          //   this[hash]();
+          // } else {
+          //   this.mySets();
+          // }
         });
       });
 
@@ -93,7 +115,7 @@ export default class Controller {
 
   mySets() {
     this.#display("mySets").then(() => {
-      this.Model.getUserSets().then((result) => {
+      this.Model.getUserSets(this.Auth.user.uid).then((result) => {
         $("#setList").html(result);
 
         $(".setInList h3").on("click", (e) => {
@@ -164,6 +186,16 @@ export default class Controller {
             card.setAttribute("data-show", "front");
           }
         });
+        if ($("#setUser").attr("data-uid")) {
+          this.#favActions();
+
+          $("#setUser").on("click", (e) => {
+            let uid = e.currentTarget.getAttribute("data-uid");
+            let uname = e.currentTarget.getAttribute("data-uname");
+
+            window.location.href = "#user/" + uid + "?" + uname;
+          });
+        }
       });
     });
   }
@@ -316,20 +348,7 @@ export default class Controller {
             window.location.hash = "#viewSet/" + id;
           });
 
-          $(".favorite").on("click", (e) => {
-            let docId = e.currentTarget.getAttribute("data-docId");
-            let setId = e.currentTarget.getAttribute("data-setId");
-
-            if (e.currentTarget.classList.contains("heart_plus")) {
-              e.currentTarget.classList.remove("heart_plus");
-              this.Model.addFavorite(docId, setId);
-              e.currentTarget.classList.add("heart_filled");
-            } else {
-              e.currentTarget.classList.remove("heart_filled");
-              this.Model.removeFavorite(docId, setId);
-              e.currentTarget.classList.add("heart_plus");
-            }
-          });
+          this.#favActions();
         });
       });
     });
@@ -337,8 +356,26 @@ export default class Controller {
 
   profile() {
     this.#display("profile").then(() => {
+      $("#profileUsername").html(
+        "Your profile, <br>" + this.Auth.user.displayName
+      );
       $("#signOut").on("click", () => {
         this.Auth.signOut();
+      });
+    });
+  }
+
+  user(get) {
+    let getVars = get.split("?");
+    let uname = getVars[1].replace("%20", " ");
+    let uid = getVars[0];
+
+    this.#display("user").then(() => {
+      $("#uname").html(uname);
+
+      this.Model.getUserSets(uid).then((html) => {
+        $("#userSets").html(html);
+        this.#favActions();
       });
     });
   }

@@ -38,6 +38,7 @@ export default class Auth {
     await createUserWithEmailAndPassword(this.auth, email, password)
       .then((userCred) => {
         this.user = userCred.user;
+        localStorage.setItem("user", JSON.stringify(this.user));
         updateProfile(this.auth.currentUser, {
           displayName: username,
         })
