@@ -43,22 +43,29 @@
             cursor: pointer;
             line-height: 27px;
         }
-
-        .edit:hover {
-            color: $green;
-            border: 2px solid $green;
-        }
-        .edit:active {
-            color: $green;
-            border: 2px solid $green;
-        }
-        .delete:hover {
-            color: $red;
-            border: 2px solid $red;
-        }
-        .delete:active {
-            color: $red;
-            border: 2px solid $red;
-        }
     }
+}
+
+.edit {
+    border: 2px solid rgba(0, 0, 0, 0);
+    padding: 3px 10px 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.edit:hover {
+    color: $green;
+    border: 2px solid $green;
+}
+.edit:active {
+    color: $green;
+    border: 2px solid $green;
+}
+.delete:hover {
+    color: $red;
+    border: 2px solid $red;
+}
+.delete:active {
+    color: $red;
+    border: 2px solid $red;
 }

@@ -185,19 +185,30 @@ nav #profile-link {
   cursor: pointer;
   line-height: 27px;
 }
-.setInList .setActions .edit:hover {
+
+.edit {
+  border: 2px solid rgba(0, 0, 0, 0);
+  padding: 3px 10px 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.edit:hover {
   color: #129176;
   border: 2px solid #129176;
 }
-.setInList .setActions .edit:active {
+
+.edit:active {
   color: #129176;
   border: 2px solid #129176;
 }
-.setInList .setActions .delete:hover {
+
+.delete:hover {
   color: #f70202;
   border: 2px solid #f70202;
 }
-.setInList .setActions .delete:active {
+
+.delete:active {
   color: #f70202;
   border: 2px solid #f70202;
 }
