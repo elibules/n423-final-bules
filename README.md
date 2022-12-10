@@ -1,5 +1,5 @@
 # 'Easy Cards' a card based study tool
-## Built as a final project for NEWMN-N423 Fall 2022
+## Built as a final project for NEWM-N423 Fall 2022
 ## Web4 Link: https://in-info-web4.informatics.iupui.edu/~ebules/n423/final_bules/
 
 ### Authentication
