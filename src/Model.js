@@ -201,6 +201,7 @@ export default class Model {
       // html += `<h3>${data.username}</h3>`;
       html += `<h1 class="setTitle">${data.title} <span class='edit' onclick="window.location.href='#edit/${id}'">&#9998;</span>
 </h1>`;
+      
     }
 
     data.cards.forEach((card, idx) => {

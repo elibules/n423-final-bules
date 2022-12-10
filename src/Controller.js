@@ -357,6 +357,7 @@ export default class Controller {
       $("#profileUsername").html(
         "Your profile, <br>" + this.Auth.user.displayName
       );
+      $("#profileEmail").append(this.Auth.user.email);
       $("#signOut").on("click", () => {
         this.Auth.signOut();
       });

@@ -37,7 +37,7 @@ p {
 }
 
 #app {
-    max-width: 600px;
+    // max-width: 600px;
     width: 100vw;
     overflow: scroll;
     min-height: calc(100vh - 70px);
@@ -45,10 +45,12 @@ p {
 }
 
 section {
+    margin: 0 auto;
     padding: 1rem 1.5rem;
     width: 100%;
+    max-width: 600px;
     min-height: calc(100vh - 70px);
-    overflow: scroll;
+    // overflow: scroll;
     margin-bottom: 70px;
 }
 
