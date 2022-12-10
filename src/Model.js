@@ -114,6 +114,8 @@ export default class Model {
         let query = await getDoc(doc(this.db, "sets", sets[i]));
         let set = query.data();
 
+        if (set === undefined) break;
+
         html += `
 					<div class="setInList">
 						<h3 data-id="${sets[i]}">${set.title}</h3>
