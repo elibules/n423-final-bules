@@ -39,6 +39,8 @@ p {
   max-width: 600px;
   width: 100vw;
   overflow: scroll;
+  min-height: calc(100vh - 70px);
+  margin-bottom: 140px;
 }
 
 section {
@@ -46,6 +48,7 @@ section {
   width: 100%;
   min-height: calc(100vh - 70px);
   overflow: scroll;
+  margin-bottom: 70px;
 }
 
 h1 {
@@ -186,30 +189,24 @@ nav #profile-link {
   cursor: pointer;
   line-height: 27px;
 }
-
-.edit {
-  border: 2px solid rgba(0, 0, 0, 0);
+.setInList .setActions .edit {
   padding: 3px 10px 5px 10px;
   border-radius: 3px;
   cursor: pointer;
 }
-
-.edit:hover {
+.setInList .setActions .edit:hover {
   color: #129176;
   border: 2px solid #129176;
 }
-
-.edit:active {
+.setInList .setActions .edit:active {
   color: #129176;
   border: 2px solid #129176;
 }
-
-.delete:hover {
+.setInList .setActions .delete:hover {
   color: #f70202;
   border: 2px solid #f70202;
 }
-
-.delete:active {
+.setInList .setActions .delete:active {
   color: #f70202;
   border: 2px solid #f70202;
 }
@@ -250,14 +247,23 @@ select {
   box-shadow: 0px 5px 10px 0px rgba(28, 28, 28, 0.329);
   padding: 0.5rem 1rem;
   border-radius: 10px;
+  position: relative;
 }
 .build-card span {
   width: fit-content;
-  display: block;
-  position: relative;
-  height: 0px;
-  left: 97%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  height: 30px;
+  width: 30px;
+  right: 10px;
   cursor: pointer;
+  text-align: center;
+}
+.build-card span:active {
+  background-color: rgb(172, 172, 172);
+  border-radius: 15px;
 }
 .build-card label {
   font-family: "Lato-Bold";
@@ -305,6 +311,20 @@ select {
   display: flex;
   align-items: center;
   justify-content: space-between;
+}
+.setTitle .edit {
+  border: 2px solid rgba(28, 28, 28, 0);
+  padding: 3px 10px 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.setTitle .edit:hover {
+  color: #129176;
+  border: 2px solid #129176;
+}
+.setTitle .edit:active {
+  color: #129176;
+  border: 2px solid #129176;
 }
 
 .favorite {

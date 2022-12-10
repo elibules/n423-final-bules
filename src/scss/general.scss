@@ -40,6 +40,8 @@ p {
     max-width: 600px;
     width: 100vw;
     overflow: scroll;
+    min-height: calc(100vh - 70px);
+    margin-bottom: 140px;
 }
 
 section {
@@ -47,6 +49,7 @@ section {
     width: 100%;
     min-height: calc(100vh - 70px);
     overflow: scroll;
+    margin-bottom: 70px;
 }
 
 h1 {

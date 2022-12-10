@@ -2,6 +2,22 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+
+    .edit {
+        border: 2px solid rgba(28, 28, 28, 0);
+        padding: 3px 10px 5px 10px;
+        border-radius: 3px;
+        cursor: pointer;
+    }
+
+    .edit:hover {
+        color: $green;
+        border: 2px solid $green;
+    }
+    .edit:active {
+        color: $green;
+        border: 2px solid $green;
+    }
 }
 
 .favorite {
