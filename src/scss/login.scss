@@ -1,0 +1,26 @@
+.login-form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+
+    label {
+        display: block;
+        font-family: "Lato-Bold";
+        font-size: 20px;
+    }
+
+    input {
+        width: 100%;
+    }
+
+    p {
+        margin-top: 20px;
+        font-size: 18px;
+    }
+}
+
+.loginBtn {
+    width: 100%;
+    margin-top: 20px;
+    font-size: 20px;
+}

@@ -1,3 +1,4 @@
+<a class="link" href="#mySets">&#129044; Cancel</a>
 <h1>Create New Flash Card Set</h1>
 <div id="build-form" class="set-form">
   <label for="title">Title</label>
@@ -10,16 +11,15 @@
   <label for="build-cards">Cards in Set</label>
   <div id="build-cards">
     <div class="build-card" id="0card">
-      <hr />
-      <span class="remove-card" onclick="removeCard(0)">X</span>
+      <span class="remove-card" onclick="removeCard(0)">&#10060;</span>
       <label>Front</label>
       <input required id="0front" class="front" type="text" />
       <label>Back</label>
       <input required id="0back" class="back" type="text" />
     </div>
   </div>
-  <button id="add-card">Add Card</button>
-  <button id="submit-set">Submit Set</button>
+  <button class="btn buildBtn" id="add-card">Add Card</button>
+  <button class="btn buildBtn" id="submit-set">Submit Set</button>
 </div>
 
 <script>

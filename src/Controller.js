@@ -209,8 +209,7 @@ export default class Controller {
 
         $("#build-cards").append(`
 					<div class="build-card" id="${cardCount}card">
-						<hr>
-						<span onclick="removeCard(${cardCount})">X</span>
+						<span onclick="removeCard(${cardCount})">&#10060;</span>
 						<label>Front</label>
 						<input required id="${cardCount}front" class="front" type="text">
 						<label>Back</label>
@@ -271,9 +270,8 @@ export default class Controller {
 
         set.cards.forEach((card, idx) => {
           $("#edit-cards").append(`							
-						<div class="edit-card" id="${idx}card">
-							<hr>
-							<span onclick="removeCard(${idx})">X</span>
+						<div class="build-card" id="${idx}card">
+							<span onclick="removeCard(${idx})">&#10060;</span>
 							<label>Front</label>
 							<input required id="${idx}front" class="front" type="text" value='${card.front}'>
 							<label>Back</label>
@@ -285,9 +283,8 @@ export default class Controller {
 
       $("#add-card").on("click", () => {
         $("#edit-cards").append(`
-					<div class="edit-card" id="${cardCount}card">
-						<hr>
-						<span onclick="removeCard(${cardCount})">X</span>
+					<div class="build-card" id="${cardCount}card">
+						<span onclick="removeCard(${cardCount})">&#10060;</span>
 						<label>Front</label>
 						<input required id="${cardCount}front" class="front" type="text">
 						<label>Back</label>
@@ -306,7 +303,7 @@ export default class Controller {
         }
 
         let cardElements = Array.from(
-          document.getElementsByClassName("edit-card")
+          document.getElementsByClassName("build-card")
         );
 
         let cards = [];
@@ -335,7 +332,8 @@ export default class Controller {
 
   search() {
     this.#display("search").then(() => {
-      $("#searchBtn").on("click", () => {
+      $("#search").on("submit", (e) => {
+        e.preventDefault();
         let terms = $("#searchBox").val();
         $("#searchBox").val("");
         $("#searchResults").html(``);
@@ -371,10 +369,14 @@ export default class Controller {
     let uid = getVars[0];
 
     this.#display("user").then(() => {
-      $("#uname").html(uname);
+      $("#uname").html(uname + "'s Study Sets");
 
       this.Model.getUserSets(uid).then((html) => {
         $("#userSets").html(html);
+        $(".setInList h3").on("click", (e) => {
+          let id = e.currentTarget.getAttribute("data-id");
+          window.location.hash = "#viewSet/" + id;
+        });
         this.#favActions();
       });
     });

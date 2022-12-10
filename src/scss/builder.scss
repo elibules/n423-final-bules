@@ -1,3 +1,53 @@
+input {
+	padding: 0.25rem 0.5rem 0.25rem 0rem;
+	font-size: 16px;
+	border: none;
+	border-bottom: 2px solid $orange;
+	background-color: rgba($color: $off-white, $alpha: 1);
+	margin-bottom: 15px;
+}
+
+#vis {
+	margin-bottom: 20px;
+	margin-top: 10px;
+}
+
+select {
+	width: 150px;
+	font-size: 16px;
+	padding: 0.25rem 0.5rem;
+	border: 2px solid $d-blue;
+}
+
+.buildBtn {
+	margin-bottom: 5px;
+	margin-top: 15px;
+	font-size: 18px;
+}
+
+#add-card {
+	margin-bottom: 0px !important;
+}
+
+.build-card {
+	margin: 20px 0px 10px 0px;
+	box-shadow: 0px 5px 10px 0px rgba(28, 28, 28, 0.329);
+	padding: 0.5rem 1rem;
+	border-radius: 10px;
+	span {
+		width: fit-content;
+		display: block;
+		position: relative;
+		height: 0px;
+		left: 97%;
+		cursor: pointer;
+	}
+
+	label {
+		font-family: "Lato-Bold";
+	}
+}
+
 .set-form {
 	display: flex;
 	flex-direction: column;

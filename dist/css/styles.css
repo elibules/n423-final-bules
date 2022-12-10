@@ -20,6 +20,9 @@
 html,
 body {
   height: 100%;
+  background-color: rgb(235, 235, 235);
+  display: flex;
+  justify-content: center;
 }
 
 h1,
@@ -32,8 +35,53 @@ p {
   margin-bottom: 16px;
 }
 
+#app {
+  max-width: 600px;
+  width: 100vw;
+}
+
 section {
-  padding: 1rem;
+  padding: 1rem 1.5rem;
+  width: 100%;
+  height: calc(100vh - 70px);
+  overflow: scroll;
+}
+
+h1 {
+  font-size: 28px;
+  margin-bottom: 25px;
+}
+
+.link {
+  text-decoration: none;
+  color: #3088a3;
+  width: fit-content;
+  cursor: pointer;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.btn {
+  cursor: pointer;
+  display: block;
+  border: 2px solid #3088a3;
+  border-radius: 3px;
+  padding: 0.5rem 1rem 0.5rem 1rem;
+}
+
+.btn:hover {
+  background-color: #3088a3;
+  color: rgb(235, 235, 235);
+  text-decoration: none;
+}
+
+.btn:active {
+  background-color: #4badcc;
+  border: 2px solid #4badcc;
+  color: rgb(235, 235, 235);
+  text-decoration: none;
 }
 
 nav {
@@ -41,7 +89,7 @@ nav {
   bottom: 0;
   width: 100vw;
   height: 70px;
-  background-color: black;
+  background-color: #ed9e09;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -71,12 +119,136 @@ nav #profile-link {
   background-image: url("../img/profile.svg");
 }
 
+.login-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+.login-form label {
+  display: block;
+  font-family: "Lato-Bold";
+  font-size: 20px;
+}
+.login-form input {
+  width: 100%;
+}
+.login-form p {
+  margin-top: 20px;
+  font-size: 18px;
+}
+
+.loginBtn {
+  width: 100%;
+  margin-top: 20px;
+  font-size: 20px;
+}
+
+#builder-link {
+  margin-bottom: 30px;
+  display: block;
+}
+
 .setInList {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  box-shadow: 0px 5px 10px 0px rgba(28, 28, 28, 0.329);
+  margin-bottom: 30px;
+  border-radius: 5px;
+  min-height: 56px;
 }
 .setInList h3 {
+  width: calc(100% - 120px);
+  word-wrap: normal;
+  margin-bottom: 0px;
+  cursor: pointer;
+}
+.setInList h3:hover {
+  text-decoration: underline;
+}
+.setInList h3:active {
+  color: #4badcc;
+  text-decoration: underline;
+}
+.setInList .setActions {
+  display: flex;
+  justify-content: space-between;
+  font-size: 22px;
+  width: 100px;
+  margin-left: 20px;
+}
+.setInList .setActions span {
+  border: 2px solid rgba(0, 0, 0, 0);
+  padding: 3px 10px 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  line-height: 27px;
+}
+.setInList .setActions .edit:hover {
+  color: #129176;
+  border: 2px solid #129176;
+}
+.setInList .setActions .edit:active {
+  color: #129176;
+  border: 2px solid #129176;
+}
+.setInList .setActions .delete:hover {
+  color: #f70202;
+  border: 2px solid #f70202;
+}
+.setInList .setActions .delete:active {
+  color: #f70202;
+  border: 2px solid #f70202;
+}
+
+input {
+  padding: 0.25rem 0.5rem 0.25rem 0rem;
+  font-size: 16px;
+  border: none;
+  border-bottom: 2px solid #f36e0a;
+  background-color: #ebebeb;
+  margin-bottom: 15px;
+}
+
+#vis {
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+
+select {
+  width: 150px;
+  font-size: 16px;
+  padding: 0.25rem 0.5rem;
+  border: 2px solid #3088a3;
+}
+
+.buildBtn {
+  margin-bottom: 5px;
+  margin-top: 15px;
+  font-size: 18px;
+}
+
+#add-card {
+  margin-bottom: 0px !important;
+}
+
+.build-card {
+  margin: 20px 0px 10px 0px;
+  box-shadow: 0px 5px 10px 0px rgba(28, 28, 28, 0.329);
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+}
+.build-card span {
   width: fit-content;
+  display: block;
+  position: relative;
+  height: 0px;
+  left: 97%;
+  cursor: pointer;
+}
+.build-card label {
+  font-family: "Lato-Bold";
 }
 
 .set-form {
@@ -102,6 +274,46 @@ nav #profile-link {
 
 .heart_plus {
   background-image: url("../img/heart_plus.svg");
+}
+
+#search #searchBox {
+  width: calc(100% - 30px);
+  font-size: 20px;
+}
+#search #searchBtn {
+  font-size: 20px;
+  border: none;
+  cursor: pointer;
+}
+#search #searchBtn:hover {
+  background-color: rgba(0, 0, 0, 0);
+}
+
+.setTitle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.favorite {
+  cursor: pointer;
+}
+
+.card {
+  margin: 0 auto;
+  text-align: center;
+  max-width: 400px;
+  height: 200px;
+  border-radius: 10px;
+  box-shadow: 0px 5px 10px 0px rgba(28, 28, 28, 0.329);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  cursor: pointer;
+  transition: transform 0.8s;
+  transform-style: preserve-3d;
+  margin-bottom: 30px;
 }
 
 /*# sourceMappingURL=styles.css.map */

@@ -1,14 +1,16 @@
-<div id="login">
+<h1 style="font-size: 36px">Welcome to Easy Cards!</h1>
+
+<div class="login-form" id="login">
   <h1>Please Login</h1>
   <label for="email">Email</label>
   <input required type="email" id="lEmail" />
   <label for="password">Password</label>
   <input required type="password" id="lPassword" />
-  <button id="submitLogin">Login</button>
-  <p id="lSwitch">Need an Account? Register Here</p>
+  <button class="btn loginBtn" id="submitLogin">Login</button>
+  <p class="link" id="lSwitch">Need an Account? Register Here</p>
 </div>
 
-<div id="register" style="display: none">
+<div class="login-form" id="register" style="display: none">
   <h1>Register an Account</h1>
   <label for="username">Username</label>
   <input required type="text" id="rUsername" />
@@ -16,8 +18,8 @@
   <input required type="email" id="rEmail" />
   <label for="password">Password</label>
   <input required type="password" id="rPassword" />
-  <button id="submitRegister">Register</button>
-  <p id="rSwitch">Already have an Account? Login here</p>
+  <button class="btn loginBtn" id="submitRegister">Register</button>
+  <p class="link" id="rSwitch">Already have an Account? Login here</p>
 </div>
 
-<button id="signInWithGoogle">Sign In With Google</button>
+<button class="btn loginBtn" id="signInWithGoogle">Sign In With Google</button>

@@ -43,8 +43,10 @@ export default class Model {
         html += `
 				<div class="setInList" data-id="${id}">
 					<h3 data-id="${id}">${data.title}</h3>
-					<span onclick="window.location.href='#edit/${id}'">&#9998;</span>
+          <div class="setActions">
+					<span class='edit' onclick="window.location.href='#edit/${id}'">&#9998;</span>
 					<span class='delete' data-id="${id}">&#128465;</span>
+          </div>
 				</div>
 			`;
       } else {
@@ -169,6 +171,7 @@ export default class Model {
     let q = await getDoc(doc(this.db, "sets", id));
     let data = q.data();
     let html = ``;
+    html += `<a class="link" onclick="history.back()">&#129044; Back</a>`;
 
     if (data.UID != user.uid) {
       const qf = await getDocs(
@@ -187,14 +190,15 @@ export default class Model {
 
       if (favSets.includes(id)) favorited = true;
 
-      html += `<h3 id="setUser" data-uid="${data.UID}" data-uname="${data.username}">${data.username}</h3>`;
+      html += `<h2 class="link" id="setUser" data-uid="${data.UID}" data-uname="${data.username}">User: ${data.username}</h2>`;
 
       favorited
-        ? (html += `<h2>${data.title}<span class="favorite heart_filled" data-docId="${favId}" data-setId="${id}"></span></h2>`)
-        : (html += `<h2>${data.title}<span class="favorite heart_plus" data-docId="${favId}" data-setId="${id}"></span></h2>`);
+        ? (html += `<h1 class="setTitle">${data.title}<span class="favorite heart_filled" data-docId="${favId}" data-setId="${id}"></span></h1>`)
+        : (html += `<h1 class="setTitle">${data.title}<span class="favorite heart_plus" data-docId="${favId}" data-setId="${id}"></span></h1>`);
     } else {
-      html += `<h3>${data.username}</h3>`;
-      html += `<h2>${data.title}</h2>`;
+      // html += `<h3>${data.username}</h3>`;
+      html += `<h1 class="setTitle">${data.title} <span class='edit' onclick="window.location.href='#edit/${id}'">&#9998;</span>
+</h1>`;
     }
 
     data.cards.forEach((card, idx) => {
