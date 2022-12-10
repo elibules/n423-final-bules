@@ -39,12 +39,13 @@ p {
 #app {
     max-width: 600px;
     width: 100vw;
+    overflow: scroll;
 }
 
 section {
     padding: 1rem 1.5rem;
     width: 100%;
-    height: calc(100vh - 70px);
+    min-height: calc(100vh - 70px);
     overflow: scroll;
 }
 
