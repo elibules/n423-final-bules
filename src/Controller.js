@@ -117,6 +117,11 @@ export default class Controller {
     this.#display("mySets").then(() => {
       this.Model.getUserSets(this.Auth.user.uid).then((result) => {
         $("#setList").html(result);
+        if (result === "") {
+          $("#setList").html(
+            `<h3>You have no sets, click on 'Create New Set' to get started!</h3>`
+          );
+        }
 
         $(".setInList h3").on("click", (e) => {
           let id = e.currentTarget.getAttribute("data-id");
