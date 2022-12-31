@@ -1,6 +1,4 @@
 # 'Easy Cards' a card based study tool
-## Built as a final project for NEWM-N423 Fall 2022
-## Web4 Link: https://in-info-web4.informatics.iupui.edu/~ebules/n423/final_bules/
 
 ### Authentication
 Users are required to login or create an account before accessing the site. This can be done using email or with Google authentication.
